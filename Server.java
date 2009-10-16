@@ -1,8 +1,9 @@
-
 import java.util.HashMap;
 import java.net.MulticastSocket;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Server {
 
@@ -12,8 +13,14 @@ public class Server {
 	private static HashMap<String, String> dnsTable;
 	private static MulticastSocket socket = null;
 	private static MulticastSocket anounceSocket = null;
-	private static final InetAddress group;
-	
+	private static InetAddress group;
+	private static int servicePort;
+	private static int announcePort;
+
+	private static final int announceDelay = 1000;
+
+	private static Timer announceTimer;
+
 	/**
 	 * Server srvc_port mcast_address mcast_port
 	 */
@@ -25,14 +32,29 @@ public class Server {
 		else {	
 			try {
 				//Initiating the socket for the service
-				socket = new MulticastSocket(Integer.valueOf(args[0]));
+				servicePort = Integer.valueOf(args[0]);
+				socket = new MulticastSocket(servicePort);
+
 
 				// Joining a multicast group
-				group = new InetAddress.getByName(args[1]);
+				group = InetAddress.getByName(args[1]);
 				socket.joinGroup(group);
 				
 				// Initiating announce socket
-				anounceSocket = new MulticastSocket(Integer.valueOf(args[2]));
+				announcePort = Integer.valueOf(args[2]);
+				anounceSocket = new MulticastSocket(announcePort);
+				anounceSocket.joinGroup(group);
+
+				announceTimer = new Timer(true);
+				announceTimer.schedule( 
+				new TimerTask() {
+					public void run() {
+						announceService();
+					}
+					
+				}, 0, announceDelay);
+
+
 
 				// Recieve packets
 				waitForPackets();
@@ -42,6 +64,27 @@ public class Server {
 			}
 		}
 	}
+
+	/*
+	 * Announce service
+	 */
+	public static void announceService() {
+		try { 
+			String msg = group.getHostAddress() + ":"+ String.valueOf(servicePort);
+
+			byte[] buffer = msg.getBytes();
+			
+			DatagramPacket announcePacket = new DatagramPacket(buffer, buffer.length, group, announcePort);
+
+			anounceSocket.send(announcePacket);
+
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	/**
 	 * Main loop for listening for the socket
