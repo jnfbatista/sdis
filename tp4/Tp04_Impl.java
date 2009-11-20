@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-package tp04;
 
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
@@ -13,18 +12,37 @@ import java.rmi.server.UnicastRemoteObject;
  * @author ei05031
  */
 public class Tp04_Impl extends UnicastRemoteObject implements Tp04 {
+	public static final NOT_FOUND = "NOT FOUND";
+	public static final REGISTERED = "REGISTERED";
+	public static final ERROR = "ERROR";
 
-    public Tp04_Impl() throws RemoteException {
+	private HashMap<String, String> dnsMap = new HashMap<String, String>();
 
-    }
 
-    public String lookup(String str) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+	public Tp04_Impl() throws RemoteException {
 
-    public String register(String str) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+	}
+
+	public String lookup(String str) throws RemoteException {
+		if(dnsMap.hasKey(str)) {
+			return dnsMap.get(str);
+		} else {
+			return NOT_FOUND;
+		}
+	}
+
+	public String register(String str) throws RemoteException {
+		String[] data = str.split(" ");
+
+		if(data.length =! 2) {
+			return ERROR;
+
+		} else {
+			dnsMap.put(data[0], data[1]);
+			return REGISTERED;
+		}
+
+	}
 
 
 

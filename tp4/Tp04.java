@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-package tp04;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

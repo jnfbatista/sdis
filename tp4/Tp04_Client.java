@@ -3,12 +3,22 @@
  * and open the template in the editor.
  */
 
-package tp04;
 
 /**
  *
  * @author ei05031
  */
 public class Tp04_Client {
+
+	public static void main(String[] args) {
+		try {
+			
+
+		}
+		catch(Exception e) {
+
+		}
+
+	}
 
 }
