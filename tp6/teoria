@@ -1,0 +1,29 @@
+TPS - JAVA RMI COM ACTIVAÇÃO
+
+Parte 2 - Preservação de Estado
+
+Problema: Como assegurar que objectos activáveis não perdem o seu estado
+quando são inactivados?
+
+Solução: Passar um java.rmi.MarshaledObject<T> no 2º argumento do
+construtor de 2 argumentos
+
+
+Q: Como é que o sistema de activação sabe que Marshalled object passar
+quando activa um objecto?
+R: Através do ActivationDesc passado quando do registo:
+O 4º argumento é do tipo Marshalled Object
+
+Factos: Marshlled objects não podem ser modificados
+2. Só é possível passar um Marshalled Object ao sistema de activação quando o
+objecto é registado
+
+
+Q: Como preservar o estado de um objecto activável usando marshalled objects?
+R: Usar Indirecção
+O marshalled object é usado para guardar um nome para um "objecto" que de
+facto guarda o estado
+
+Implementação de objectos activaveis:
+1 - Construtor tem que usar esta informação para repor o estado
+2 - Todos os métodos que alteram estado têm que guardar o estado no Objecto
