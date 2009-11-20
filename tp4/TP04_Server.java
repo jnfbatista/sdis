@@ -5,15 +5,12 @@
 
 package tp04;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 
 
 /**
  *
  * @author ei05031
  */
-public class Server {
+public class TP04_Server {
 
 }
